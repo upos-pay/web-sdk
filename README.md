@@ -2,6 +2,12 @@
 
 Official lightweight Web SDK for UPOS payments. Seamlessly integrate checkout into any web application (React, Vue, Angular, or Vanilla JS).
 
+## Ecosystem
+
+Looking for other ways to integrate UPOS? Check out our other repositories:
+
+- **[WooCommerce Plugin](https://github.com/upos-pay/woocommerce-gateway)** - Official UPOS payment gateway for WooCommerce.
+
 ## Installation
 
 ### NPM
@@ -171,6 +177,8 @@ export class CheckoutComponent implements AfterViewInit {
   }
 }
 ```
+
+| `PrepareCallback` | [`PrepareCallback`](src/types/index.ts#L35) | - | Callback to create payment intent, returns `{ token }` |
 
 ## Configuration
 
