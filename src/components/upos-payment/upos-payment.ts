@@ -1,6 +1,6 @@
 import { provide } from '@lit/context'
 import { LitElement, html } from 'lit'
-import { customElement, property, state } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 import { unsafeStatic, html as staticHtml } from 'lit/static-html.js'
 
 import '../ui/upos-button'
@@ -32,27 +32,47 @@ import { styles } from './styles'
 
 @customElement('upos-payment')
 export class UposPayment extends LitElement {
+  static properties = {
+    publicKey: { type: String, attribute: 'public-key' },
+    apiHost: { type: String, attribute: 'api-host' },
+    prepare: { type: Object },
+    logLevel: { type: String, attribute: 'log-level' },
+    defaultMethod: { type: String, attribute: 'default-method' },
+    locale: { type: String },
+    translations: {
+      type: Object,
+      converter: {
+        fromAttribute: (value: string | null) => {
+          if (!value) { return undefined }
+          try {
+            return JSON.parse(value)
+          } catch (e) {
+            console.warn('Invalid translations JSON:', value)
+            return undefined
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Public key for authentication and environment detection.
    * - Keys starting with `pk_live_` use production API (real transactions)
    * - All other keys use test API (sandbox)
    * @required
    */
-  @property({ type: String, attribute: 'public-key' })
   publicKey?: string
 
   /**
    * Custom API host URL to override the default environment-based endpoints.
    * Useful for custom deployments or staging environments.
    */
-  @property({ type: String, attribute: 'api-host' })
   apiHost?: string
 
   /**
    * Callback to get payment parameters before redirect.
    * Called when user submits, should return order info and redirect URLs.
    */
-  @property({ type: Object })
   prepare?: PrepareCallback
 
   /**
@@ -63,14 +83,12 @@ export class UposPayment extends LitElement {
    * - `debug`: All logs including debug
    * @default 'warn'
    */
-  @property({ type: String, attribute: 'log-level' })
   logLevel: LogLevel = 'warn'
 
   /**
    * The default payment method to be pre-selected when the component loads.
    * @default 'crypto_tron'
    */
-  @property({ type: String, attribute: 'default-method' })
   defaultMethod: PaymentMethodType = 'crypto_tron'
 
   /**
@@ -79,7 +97,6 @@ export class UposPayment extends LitElement {
    * Supported locales: 'en-US' (English), 'zh-TW' (Traditional Chinese)
    * @default 'en-US'
    */
-  @property({ type: String })
   locale: SupportedLocale = 'en-US'
 
   /**
@@ -88,20 +105,6 @@ export class UposPayment extends LitElement {
    * Custom translations take the highest priority in the fallback chain.
    * Can be set via JavaScript property or as JSON string attribute.
    */
-  @property({
-    type: Object,
-    converter: {
-      fromAttribute: (value: string | null) => {
-        if (!value) { return undefined }
-        try {
-          return JSON.parse(value)
-        } catch (e) {
-          console.warn('Invalid translations JSON:', value)
-          return undefined
-        }
-      }
-    }
-  })
   translations?: Partial<Translations>
 
   @provide({ context: AppContext })
