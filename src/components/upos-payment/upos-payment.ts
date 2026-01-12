@@ -149,10 +149,6 @@ export class UposPayment extends LitElement {
   connectedCallback() {
     super.connectedCallback()
 
-    if (!this.publicKey) {
-      throw new UposError('ConfigError', 'public-key is required')
-    }
-
     this.selectedMethod = this.defaultMethod
 
     // Scan and register all existing upos-t elements in light DOM
@@ -172,6 +168,10 @@ export class UposPayment extends LitElement {
   }
 
   firstUpdated() {
+    if (!this.publicKey) {
+      throw new UposError('ConfigError', 'public-key is required')
+    }
+
     // Sync log level from attribute (constructor runs before attribute parsing)
     this.paymentFlow.setLogLevel(this.logLevel)
 

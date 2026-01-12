@@ -1,6 +1,6 @@
 {
   "name": "@upos-pay/web-sdk",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Official Web SDK for UPOS payments",
   "author": "UPOS",
   "license": "MIT",
